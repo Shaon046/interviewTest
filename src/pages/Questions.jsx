@@ -74,97 +74,87 @@ const NextButton = styled.button`
 `;
 
 const Questions = () => {
+  ///states///
+  const [index, setindex] = useState(0);
+  const [userAnswer, setUserAnswer] = useState(null);
+  const [score, setScore] = useState(0);
+  const [questionArrayLength, setQuestionArrayLength] = useState();
+  const [status, setStatus] = useState(false);
+  const [buttonName, SetButtonName] = useState("Next");
+  const [showQuestions, setShowQuestions] = useState(true);
+  const[attempts,setAttempts]=useState(0)
+  ///states///
 
-///states///
-const[index,setindex]=useState(0)
-const [userAnswer,setUserAnswer]=useState(null)
-const[score,setScore]=useState(0)
-const[questionArrayLength,setQuestionArrayLength]=useState()
-const [status,setStatus]=useState(false)
-const [nextButtonDisable,setnextButtonDisable]=useState(false)
-const [buttonName,SetButtonName]=useState("Next")
-const[showQuestions,setShowQuestions]=useState(true)
-//////
+  const quizApiStatus = useSelector((state) => state.quiz.status) || false; /////async
+  const questions = useSelector((state) => state.quiz.questions) || false; /////async
+  const [question, setQuestion] = useState();
 
-const quizApiStatus=useSelector((state)=>state.quiz.status) || false  /////async
-const questions=useSelector((state)=>state.quiz.questions) || false  /////async
-const [question,setQuestion]=useState()
-
-useEffect(()=>{
-  setQuestion(questions[index])
-
-  if(quizApiStatus==='succeeded'){ setStatus(true)}
-  else{setStatus(false)}
-
-
-  if(status){
-    setQuestionArrayLength(questions.length)}
-    else{
-     setQuestionArrayLength(0)
+  useEffect(() => {
+    setQuestion(questions[index]);
+    /////api status
+    if (quizApiStatus === "succeeded") {
+      setStatus(true);
+    } else {
+      setStatus(false);
     }
-  
-/////when questions end
-if(questionArrayLength-1>index){
-  SetButtonName("Next")
-}else{
-  SetButtonName("Finish")
-}
-},[questions,index,quizApiStatus,status,questionArrayLength])
-///////
 
+    ////////check question object length
+    if (status) {
+      setQuestionArrayLength(questions.length);
+    } else {
+      setQuestionArrayLength(0);
+    }
 
+    /////when questions end
+    if (questionArrayLength - 1 > index) {
+      SetButtonName("Next");
+    } else {
+      SetButtonName("Finish");
+    }
+  }, [questions, index, quizApiStatus, status, questionArrayLength]);
 
-  const OptionOnClickHandler = (eve) => {setUserAnswer(eve.target.innerText)};
+  const OptionOnClickHandler = (eve) => {
+    setUserAnswer(eve.target.innerText);
+  };
 
+  const nextOnclickHandler = () => {
+    ///next Change
+    setindex((prev) => prev + 1);
+    setQuestion(questions[index]);
 
-  const nextOnclickHandler=()=>{
-///next Change
-  setindex((prev)=>prev+1)
-  setQuestion(questions[index]);
-
-//answer evaluation
-if(question.answer ){
-  if(question.answer ===userAnswer)
-  {setScore((prev)=>prev+1)}
-  else{setScore((prev)=>prev)}
-}
-/////finish
-if(buttonName==="Finish"){
-  setShowQuestions(false)
-}
-
-
-;};
-
-
-
-console.log(nextButtonDisable,index,questionArrayLength)
+    //answer evaluation
+    if (question.answer) {
+      if (question.answer === userAnswer) {
+        setScore((prev) => prev + 1);
+      } else {
+        setScore((prev) => prev);
+      }
+    }
+    /////finish
+    if (buttonName === "Finish") {
+      setShowQuestions(false);
+      setAttempts(prev=>prev+1)
+    }
+  };
 
   return (
     <QuestionnairePageContainer>
-      
-{ !showQuestions && <TestFinish>{score}</TestFinish>}
-    { 
-    showQuestions&&
-    question && <QuestionnaireContainer>
-        <QuestionDiv>
-        {question.question}
-        </QuestionDiv>
+      {!showQuestions && <TestFinish>{score}</TestFinish>}
+      {showQuestions && question && (
+        <QuestionnaireContainer>
+          <QuestionDiv>{question.question}</QuestionDiv>
 
-{question.options.map((option)=>(<Options onClick={(e) => OptionOnClickHandler(e)}>
-         {option}
-        </Options>))
-        }
-        
+          {question.options.map((option) => (
+            <Options onClick={(e) => OptionOnClickHandler(e)}>{option}</Options>
+          ))}
 
-        <NextButton  onClick={()=>nextOnclickHandler()}>{buttonName}</NextButton>
-      </QuestionnaireContainer>
-      }
+          <NextButton onClick={() => nextOnclickHandler()}>
+            {buttonName}
+          </NextButton>
+        </QuestionnaireContainer>
+      )}
 
-
-      <SignoutButton/>
-
-      
+      <SignoutButton />
     </QuestionnairePageContainer>
   );
 };

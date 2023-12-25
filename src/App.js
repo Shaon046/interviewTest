@@ -7,12 +7,10 @@ import ProtectPage from "./pages/components/ProtectPage";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./api/firebase";
 import { useState } from "react";
-import { addQuestions ,getQuestions} from "./api/firebaseFunctions";
-import { useSelector } from "react-redux";
+import { getQuestions } from "./api/firebaseFunctions";
 import { useDispatch } from "react-redux";
 import { getQuestion } from "./rudux/slices/QuizSlice";
 import { useEffect } from "react";
-import TestFinish from "./pages/components/TestFinish";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -26,40 +24,33 @@ function App() {
     }
   });
 
+  //////////adding questions
+  //addQuestions()
+  //////////adding questions
 
-//////////adding questions
-//addQuestions()
-//////////adding questions
+  //////loading questions/////
 
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getQuestion());
+  }, [dispatch]);
 
-//////loading questions/////
-
-const dispatch=useDispatch()
-useEffect(() => {
-  
-  dispatch(getQuestion());
-}, [dispatch]);
-
-
-getQuestions()
-console.log(user,"this is user from app.js")
-
-// const state=useSelector(state=>state)
-
-// console.log(state, "from app.js state")
+  getQuestions();
+  console.log(user, "this is user from app.js");
 
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Navigate to="/login" />} />
-        <Route path="/login" element={user ? <QuestionnairePage /> : <LoginPage />}
+        <Route
+          path="/login"
+          element={user ? <QuestionnairePage /> : <LoginPage />}
         ></Route>
         <Route path="/" element={<ProtectPage />}>
           <Route path="/assesment" element={<QuestionnairePage />} />
         </Route>
 
         <Route path="/start" element={<StartConfirmation />} />
-        <Route path="/sas" element={<TestFinish/>} />
       </Routes>
     </BrowserRouter>
   );
