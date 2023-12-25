@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import SignoutButton from "./components/SignoutButton";
+import { useSelector } from "react-redux";
 const QuestionnairePageContainer = styled.div`
   display: flex;
   justify-content: center;
@@ -72,37 +73,77 @@ const NextButton = styled.button`
 `;
 
 const Questions = () => {
-  const [option, setOption] = useState();
 
-  const OptionOnClickHandler = (eve) => {
-    console.log(eve.target.innerText);
-  };
+///states///
+const[index,setindex]=useState(0)
+const [userAnswer,setUserAnswer]=useState(null)
+const[score,setScore]=useState(0)
+const[questionArrayLength,setQuestionArrayLength]=useState()
+const [status,setStatus]=useState(false)
+//////
+
+const quizApiStatus=useSelector((state)=>state.quiz.status) || false  /////async
+const questions=useSelector((state)=>state.quiz.questions) || false  /////async
+const [question,setQuestion]=useState()
+
+useEffect(()=>{
+  setQuestion(questions[index])
+
+  if(quizApiStatus==='succeeded'){ setStatus(true)}
+  else{setStatus(false)}
+
+
+  if(status){
+    setQuestionArrayLength(questions.length)}
+    else{
+     setQuestionArrayLength(0)
+    }
+  
+},[questions,index,quizApiStatus,status,questionArrayLength])
+///////
+
+
+
+  const OptionOnClickHandler = (eve) => {setUserAnswer(eve.target.innerText)};
+
+
+  const nextOnclickHandler=()=>{
+///next Change
+  setindex((prev)=>prev+1)
+  setQuestion(questions[index]);
+
+//answer evaluation
+if(question.answer ){
+  if(question.answer ===userAnswer)
+  {setScore((prev)=>prev+1)}
+  else{setScore((prev)=>prev)}
+
+/////when questions end
+
+
+};};
+
+console.log(questionArrayLength,status)
+
+
 
   return (
     <QuestionnairePageContainer>
       {/* Get ready for an exciting journey of knowledge and fun. */}
 
-      <QuestionnaireContainer>
+    { question && <QuestionnaireContainer>
         <QuestionDiv>
-          1.Lorem, ipsum dolor sit amet consectetur adipisicing elit{" "}
+        {question.question}
         </QuestionDiv>
 
-        <Options onClick={(e) => OptionOnClickHandler(e)}>
-          1.Lorem ipsumg elit. Assumenda, non.
-        </Options>
-        <Options onClick={(e) => OptionOnClickHandler(e)}>
-          2. Lorem ipsum dolor sit amet conselit. Assumenda, non.
-        </Options>
-        <Options onClick={(e) => OptionOnClickHandler(e)}>
-          {" "}
-          3.Lorem ipsicing elit. Assumenda, non.
-        </Options>
-        <Options onClick={(e) => OptionOnClickHandler(e)}>
-          4.Lorem ipsum dolor sit amet co.
-        </Options>
+{question.options.map((option)=>(<Options onClick={(e) => OptionOnClickHandler(e)}>
+         {option}
+        </Options>))
+        }
+        
 
-        <NextButton>Next</NextButton>
-      </QuestionnaireContainer>
+        <NextButton onClick={()=>nextOnclickHandler()}>Next</NextButton>
+      </QuestionnaireContainer>}
       <SignoutButton/>
     </QuestionnairePageContainer>
   );

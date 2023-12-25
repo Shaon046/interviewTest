@@ -1,11 +1,11 @@
 import { combineReducers } from "@reduxjs/toolkit";
-import quizTimerSlice from "./slices/QuizTimerSlice";
-import authSlice from "./slices/AuthenticationSlice";
+import quizSlice from "./slices/QuizSlice";
+// import authSlice from "./slices/AuthenticationSlice";
 
 
 
 const rootReducer=combineReducers(
-    {quiz:quizTimerSlice.reducer,
+    {quiz:quizSlice.reducer,
        // auth:authSlice.reducer,
         
      }

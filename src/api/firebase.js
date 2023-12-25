@@ -2,6 +2,8 @@ import { initializeApp } from "firebase/app";
 import { GoogleAuthProvider, getAuth, onAuthStateChanged } from "firebase/auth";
 import { getDatabase } from "firebase/database";
 
+
+
 const firebaseConfig = {
   apiKey: "AIzaSyB7QOTV5KqfezZu-kQMXBUaQt6GeCLI4vA",
   authDomain: "interview-18fb8.firebaseapp.com",

@@ -7,6 +7,11 @@ import ProtectPage from "./pages/components/ProtectPage";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./api/firebase";
 import { useState } from "react";
+import { addQuestions ,getQuestions} from "./api/firebaseFunctions";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { getQuestion } from "./rudux/slices/QuizSlice";
+import { useEffect } from "react";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -20,7 +25,27 @@ function App() {
     }
   });
 
-console.log(user,"this is usser")
+
+//////////adding questions
+//addQuestions()
+//////////adding questions
+
+
+//////loading questions/////
+
+const dispatch=useDispatch()
+useEffect(() => {
+  
+  dispatch(getQuestion());
+}, [dispatch]);
+
+
+getQuestions()
+console.log(user,"this is user from app.js")
+
+// const state=useSelector(state=>state)
+
+// console.log(state, "from app.js state")
 
   return (
     <BrowserRouter>
