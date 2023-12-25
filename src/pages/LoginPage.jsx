@@ -3,7 +3,10 @@ import styled from "styled-components";
 import userLogo from "../assets/user.png";
 
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+
+
+
+import {SignupFunction} from "../api/firebaseFunctions"
 
 const LoginPageContainer = styled.div`
   display: flex;
@@ -65,11 +68,11 @@ const LoginPage = () => {
   /////HOOKS
   const navigate = useNavigate();
 
-  const loginWithGoogleFunction = useSelector((state) => state.firebase.login);
+
 
   ////stored this function in redux
   const handleGoogleLogin = async () =>
-    await loginWithGoogleFunction(() => navigate());
+    await SignupFunction(() => navigate());
 
   return (
     <LoginPageContainer>
