@@ -12,6 +12,7 @@ import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { getQuestion } from "./rudux/slices/QuizSlice";
 import { useEffect } from "react";
+import TestFinish from "./pages/components/TestFinish";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -58,6 +59,7 @@ console.log(user,"this is user from app.js")
         </Route>
 
         <Route path="/start" element={<StartConfirmation />} />
+        <Route path="/sas" element={<TestFinish/>} />
       </Routes>
     </BrowserRouter>
   );

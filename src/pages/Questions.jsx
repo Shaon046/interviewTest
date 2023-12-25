@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import SignoutButton from "./components/SignoutButton";
 import { useSelector } from "react-redux";
+import TestFinish from "./components/TestFinish";
 const QuestionnairePageContainer = styled.div`
   display: flex;
   justify-content: center;
@@ -80,6 +81,9 @@ const [userAnswer,setUserAnswer]=useState(null)
 const[score,setScore]=useState(0)
 const[questionArrayLength,setQuestionArrayLength]=useState()
 const [status,setStatus]=useState(false)
+const [nextButtonDisable,setnextButtonDisable]=useState(false)
+const [buttonName,SetButtonName]=useState("Next")
+const[showQuestions,setShowQuestions]=useState(true)
 //////
 
 const quizApiStatus=useSelector((state)=>state.quiz.status) || false  /////async
@@ -99,6 +103,12 @@ useEffect(()=>{
      setQuestionArrayLength(0)
     }
   
+/////when questions end
+if(questionArrayLength-1>index){
+  SetButtonName("Next")
+}else{
+  SetButtonName("Finish")
+}
 },[questions,index,quizApiStatus,status,questionArrayLength])
 ///////
 
@@ -117,21 +127,26 @@ if(question.answer ){
   if(question.answer ===userAnswer)
   {setScore((prev)=>prev+1)}
   else{setScore((prev)=>prev)}
-
-/////when questions end
-
-
-};};
-
-console.log(questionArrayLength,status)
+}
+/////finish
+if(buttonName==="Finish"){
+  setShowQuestions(false)
+}
 
 
+;};
+
+
+
+console.log(nextButtonDisable,index,questionArrayLength)
 
   return (
     <QuestionnairePageContainer>
-      {/* Get ready for an exciting journey of knowledge and fun. */}
-
-    { question && <QuestionnaireContainer>
+      
+{ !showQuestions && <TestFinish>{score}</TestFinish>}
+    { 
+    showQuestions&&
+    question && <QuestionnaireContainer>
         <QuestionDiv>
         {question.question}
         </QuestionDiv>
@@ -142,9 +157,14 @@ console.log(questionArrayLength,status)
         }
         
 
-        <NextButton onClick={()=>nextOnclickHandler()}>Next</NextButton>
-      </QuestionnaireContainer>}
+        <NextButton  onClick={()=>nextOnclickHandler()}>{buttonName}</NextButton>
+      </QuestionnaireContainer>
+      }
+
+
       <SignoutButton/>
+
+      
     </QuestionnairePageContainer>
   );
 };
