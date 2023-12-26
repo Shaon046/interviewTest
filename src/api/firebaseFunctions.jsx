@@ -1,7 +1,7 @@
 import { signInWithPopup } from "firebase/auth";
 import { googleAuthProvider, auth } from "./firebase";
 import { database } from "./firebase";
-import { set, ref } from "firebase/database";
+import { set, ref,child,get } from "firebase/database";
 import {
   getFirestore,
   collection,
@@ -12,6 +12,11 @@ import {
 } from "firebase/firestore";
 import { firebaseApp } from "./firebase";
 import questions from "../assets/questions";
+import { onAuthStateChanged } from "firebase/auth";
+
+
+
+////////google signup
 const SignupFunction = async (callback) => {
   try {
     const result = await signInWithPopup(auth, googleAuthProvider);
@@ -37,9 +42,62 @@ const SignupFunction = async (callback) => {
   }
 };
 
+
+/////Make a user in db which is called from google signup function
 const registerUser = (key, data) => {
   set(ref(database, "user/" + key), data);
 };
+
+
+const getUser = (username) => {
+  return new Promise((resolve, reject) => {
+    get(child(ref(database), `user/${username}`))
+      .then((snapshot) => {
+        if (snapshot.exists()) {
+          resolve(snapshot.val());
+        } else {
+          console.log("No data available");
+          resolve(null);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        reject(error); 
+      });
+  });
+};
+
+
+
+
+
+
+
+
+
+
+
+const authCheck=()=>{
+onAuthStateChanged(auth,(user=>{
+  if(user){
+    return (user.displayName)
+  }else{
+    return null;
+  }
+}))
+}
+
+
+//  onAuthStateChanged(auth, (user) => {
+//     if (user) {
+//       setUser(user.displayName);
+//     } else {
+//       setUser(null);
+//     }
+//   });
+
+
+
 
 const addQuestions = async () => {
   const fireStore = getFirestore(firebaseApp);
@@ -75,4 +133,4 @@ const getQuestions = async () => {
 
 // }
 
-export { SignupFunction, addQuestions, getQuestions };
+export { SignupFunction, addQuestions, getQuestions,getUser,authCheck };

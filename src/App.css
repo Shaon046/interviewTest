@@ -1,26 +1,21 @@
-*{
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-
 }
 
 :root {
-  --white: #fff; 
-  
-  --main-background-color: rgb(199,238,245);
-  --main-background-shadow-color:rgb(107, 218, 233);
+  --white: #fff;
 
+  --main-background-color: rgb(199, 238, 245);
+  --main-background-shadow-color: rgb(107, 218, 233);
 
-  --button-background :rgb(233, 142, 96);
-  --button-background-hover:rgb(237, 162, 124);
-  
+  --button-background: rgb(233, 142, 96);
+  --button-background-hover: rgb(237, 162, 124);
 
-  --dark-blue:rgb(19,66,100);
-
-
+  --dark-blue: rgb(19, 66, 100);
 }
 
-.selectedOption{
+.selectedOption {
   background-color: rgb(223, 247, 252);
 }

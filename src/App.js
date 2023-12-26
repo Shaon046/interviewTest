@@ -7,15 +7,20 @@ import ProtectPage from "./pages/components/ProtectPage";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./api/firebase";
 import { useState } from "react";
-import { getQuestions } from "./api/firebaseFunctions";
+import { getUser } from "./api/firebaseFunctions";
 import { useDispatch } from "react-redux";
 import { getQuestion } from "./rudux/slices/QuizSlice";
 import { useEffect } from "react";
+import { getUserDetais } from "./rudux/slices/AuthenticationSlice";
+
+
 
 function App() {
   const [user, setUser] = useState(null);
-
-  ///////it will check if user
+  const [userDetails,setUserDetails]=useState()
+  const dispatch = useDispatch();
+  
+///////it will check if user
   onAuthStateChanged(auth, (user) => {
     if (user) {
       setUser(user.displayName);
@@ -24,19 +29,40 @@ function App() {
     }
   });
 
+
+ //
+
+
+
+
+
   //////////adding questions
   //addQuestions()
   //////////adding questions
 
   //////loading questions/////
-
-  const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getQuestion());
-  }, [dispatch]);
+    getUser(user).then((userDetails)=>setUserDetails(userDetails))
+  }, [dispatch,user]);
+  dispatch(getUserDetais(userDetails))
+  
 
-  getQuestions();
-  console.log(user, "this is user from app.js");
+
+
+
+
+
+
+  /////get user details
+
+
+////currently working
+ 
+
+ 
+
+
 
   return (
     <BrowserRouter>

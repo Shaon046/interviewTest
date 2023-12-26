@@ -35,4 +35,4 @@ const quizSlice = createSlice({
 
 export default quizSlice;
 
-// export const { startTimer } = quizTimerSlice.actions;
+
