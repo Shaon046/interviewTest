@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
+import '../../src/App.css'
 import styled from "styled-components";
 import SignoutButton from "./components/SignoutButton";
 import { useSelector } from "react-redux";
 import TestFinish from "./components/TestFinish";
+
+
 const QuestionnairePageContainer = styled.div`
   display: flex;
   justify-content: center;
@@ -76,6 +79,7 @@ const NextButton = styled.button`
 const Questions = () => {
   ///states///
   const [index, setindex] = useState(0);
+  const[highlightedOption, setHighlightedOption]=useState(null)
   const [userAnswer, setUserAnswer] = useState(null);
   const [score, setScore] = useState(0);
   const [questionArrayLength, setQuestionArrayLength] = useState();
@@ -113,8 +117,10 @@ const Questions = () => {
     }
   }, [questions, index, quizApiStatus, status, questionArrayLength]);
 
-  const OptionOnClickHandler = (eve) => {
+  const OptionOnClickHandler = (eve,idx) => {
     setUserAnswer(eve.target.innerText);
+    setHighlightedOption(idx);
+    console.log(idx)
   };
 
   const nextOnclickHandler = () => {
@@ -137,6 +143,9 @@ const Questions = () => {
     }
   };
 
+
+
+
   return (
     <QuestionnairePageContainer>
       {!showQuestions && <TestFinish>{score}</TestFinish>}
@@ -144,11 +153,13 @@ const Questions = () => {
         <QuestionnaireContainer>
           <QuestionDiv>{question.question}</QuestionDiv>
 
-          {question.options.map((option) => (
-            <Options onClick={(e) => OptionOnClickHandler(e)}>{option}</Options>
+          {question.options.map((option,idx) => (
+            <Options key={idx} className={highlightedOption===idx? "selectedOption":'' }   onClick={(e) => OptionOnClickHandler(e,idx)}>{option}</Options>
           ))}
 
-          <NextButton onClick={() => nextOnclickHandler()}>
+          <NextButton onClick={() => nextOnclickHandler()}
+          className={"backgroundColor:blue"}
+          >
             {buttonName}
           </NextButton>
         </QuestionnaireContainer>
